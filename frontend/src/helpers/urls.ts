@@ -13,9 +13,10 @@ export const urls: url = {
   removeFrame: "/inventory/product/frame",
   //orders
   getAllOrders: "/orders/allOrders",
-  createOrder : "/orders/add",
+  createOrder: "/orders/add",
+  updateOrder: "/orders/updateOrder",
+  deleteOrder: "/orders/removeOrder",
 
   //customers
   getAllCustomers: "/customer/all",
 };
-

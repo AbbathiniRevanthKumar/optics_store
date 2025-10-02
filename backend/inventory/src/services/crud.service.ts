@@ -30,7 +30,13 @@ const crudService = <T extends Model>(Model: ModelStatic<T>) => ({
 
   async getById(id: number, options: { transaction?: Transaction } = {}) {
     try {
-      return await Model.findByPk(id, { transaction: options.transaction });
+      return await Model.findOne({
+        where: {
+          id: id,
+          status: 1,
+        } as any,
+        transaction: options.transaction,
+      });
     } catch (error) {
       throw error;
     }
@@ -68,6 +74,19 @@ const crudService = <T extends Model>(Model: ModelStatic<T>) => ({
 
       if (affectedCount === 0) return null;
       return affectedRows[0];
+    } catch (error) {
+      throw error;
+    }
+  },
+
+    async findById(id: number, options: { transaction?: Transaction } = {}) {
+    try {
+      return await Model.findOne({
+        where: {
+          id: id,
+        } as any,
+        transaction: options.transaction,
+      });
     } catch (error) {
       throw error;
     }

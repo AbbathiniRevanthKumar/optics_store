@@ -72,6 +72,7 @@ const AddOrder = ({ completed, orderData }: Props) => {
   const [error, setErrors] = useState<any>({});
   const [isEdit, setIsEdit] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
     const fetchInventory = async () => {
@@ -111,6 +112,7 @@ const AddOrder = ({ completed, orderData }: Props) => {
       itemsToList.push(itemToList);
     });
 
+    setOrderId(orderData.id);
     setOrderItems(itemsToList);
     setDeliveryDate(orderData.o_delivery_date);
     setOrderDate(orderData.o_order_date);
@@ -154,6 +156,8 @@ const AddOrder = ({ completed, orderData }: Props) => {
     const inventoryItem: any = inventory.find(
       (inventoryItem) => inventoryItem.id === item.id
     );
+    
+    if (!inventoryItem) return false;
 
     return inventoryItem.f_qty >= item.Quantity + 1;
   };
@@ -320,15 +324,15 @@ const AddOrder = ({ completed, orderData }: Props) => {
     };
 
     try {
-      if (isEdit) {
-        console.log("Need to update");
-        return;
+      let saveOrderResponse = null;
+      if (isEdit && orderId) {
+        saveOrderResponse = await apigateway.put(
+          `${urls.updateOrder}/${orderId}`,
+          orderBody
+        );
+      } else {
+        saveOrderResponse = await apigateway.post(urls.createOrder, orderBody);
       }
-
-      const saveOrderResponse = await apigateway.post(
-        urls.createOrder,
-        orderBody
-      );
       completed(true);
       toast(
         <CustomToaster

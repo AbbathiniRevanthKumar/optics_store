@@ -3,15 +3,17 @@ import { useAppSelector } from "../../store/customStoreHook";
 import Modal from "../Helpers/Modal";
 import TableGrid from "../Helpers/TableGrid";
 import FormField from "../Helpers/FormField";
-import { apigateway } from "../../config/axios.config";
+import { apigateway, handleApiError } from "../../config/axios.config";
 import { urls } from "../../helpers/urls";
 import { calcPrice } from "../../helpers/helpers";
 import { orderListHeaders } from "../../helpers/tableHeaders";
 import AddOrder from "./AddOrder";
+import CustomToaster from "../Helpers/CustomToaster";
+import { toast } from "react-toastify";
 
 type Props = {};
 
-const OrdersList = (props: Props) => {
+const OrdersList = (_props: Props) => {
   const { user } = useAppSelector((state) => state.auth);
   const [orderType, setOrderType] = useState<string>("all");
   const [orderList, setOrderList] = useState([]);
@@ -53,7 +55,7 @@ const OrdersList = (props: Props) => {
         orderId: order.id,
         customerName: order?.customer?.c_name || "-",
         productsDesc: itemsDesc,
-        price: `Rs. ${totalPrice}`,
+        price: `Rs. ${totalPrice.toFixed(2)}`,
         orderedDate: order?.createdAt.split("T")[0],
         orderDeliveryDate: order?.o_delivery_date || "-",
         orderStatus: order?.o_status || "Pending",
@@ -94,6 +96,29 @@ const OrdersList = (props: Props) => {
     setCurrentOrder(orderData as any);
     setShowModal(true);
   };
+
+  const handleDeleteOrder = async (order: any) => {
+    try {
+      const saveOrderResponse: any = await apigateway.delete(
+        `${urls.deleteOrder}/${order.orderId}`
+      );
+      if (saveOrderResponse && !saveOrderResponse.data.success)
+        throw new Error();
+
+      toast(
+        <CustomToaster
+          type="success"
+          message={saveOrderResponse?.data?.message || "order deleted!"}
+        />
+      );
+      setIsOrdersChanged(isOrdersChanged + 1);
+    } catch (error) {
+      console.log(error);
+      const message = handleApiError(error, "Error at deleting order");
+      toast(<CustomToaster message={message} type="error" />);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Top Bar */}
@@ -121,14 +146,16 @@ const OrdersList = (props: Props) => {
         </div>
 
         {/* Add Button */}
-        <button
-          className="px-5 py-2.5 bg-primary text-text-primary text-sm md:text-base font-medium 
+        {user.role !== "user" && (
+          <button
+            className="px-5 py-2.5 bg-primary text-text-primary text-sm md:text-base font-medium 
                    rounded-xl shadow-sm hover:bg-primary-hover hover:shadow-md 
                    active:scale-95 transition-all duration-200"
-          onClick={handleAddOrder}
-        >
-          + Add Order
-        </button>
+            onClick={handleAddOrder}
+          >
+            + Add Order
+          </button>
+        )}
       </div>
 
       {/* Table Section */}
@@ -138,7 +165,7 @@ const OrdersList = (props: Props) => {
           rows={filteredOrderList}
           actions={user.role !== "user"}
           onEdit={handleEditOrder}
-          onDelete={() => {}}
+          onDelete={handleDeleteOrder}
           dataType={"Orders"}
         />
       </div>

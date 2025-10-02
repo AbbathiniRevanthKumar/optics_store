@@ -43,3 +43,18 @@ export const orderListbyCustomerId = async (id: number) => {
 
   return details;
 };
+
+export const orderDetailsById = async (id: number) => {
+  const details = await db.Order.findOne({
+    where: { id: id, status: 1 },
+    include: [
+      { model: Customer, as: "customer" },
+      {
+        model: OrderItem,
+        as: "order_items",
+        include: [{ model: Frame, as: "frame" }],
+      },
+    ],
+  });
+  return details;
+};

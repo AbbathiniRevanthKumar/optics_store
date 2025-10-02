@@ -21,4 +21,17 @@ router.get(
   orderController.ordersDetailsListByCustomerId
 );
 
+router.put(
+  "/updateOrder/:id",
+  authorizeRole(["admin", "super-admin"]),
+  orderController.updateOrderByOrderId
+);
+
+
+router.delete(
+  "/removeOrder/:id",
+  authorizeRole(["admin", "super-admin"]),
+  orderController.deleteOrder
+);
+
 export default router;

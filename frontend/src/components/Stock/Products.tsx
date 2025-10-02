@@ -101,17 +101,19 @@ const Products = (props: Props) => {
         </div>
 
         {/* Add Button */}
-        <button
-          className="px-5 py-2 bg-primary text-text-primary text-sm md:text-base font-medium 
+        {user.role !== "user" && (
+          <button
+            className="px-5 py-2 bg-primary text-text-primary text-sm md:text-base font-medium 
                    rounded-xl shadow-sm hover:bg-primary-hover hover:shadow-md 
                    active:scale-95 transition-all duration-200"
-          onClick={() => {
-            setProductDetails(frameProductDetailsTemplate);
-            setShowModel(true);
-          }}
-        >
-          + Add {type.charAt(0).toUpperCase() + type.slice(1)}
-        </button>
+            onClick={() => {
+              setProductDetails(frameProductDetailsTemplate);
+              setShowModel(true);
+            }}
+          >
+            + Add {type.charAt(0).toUpperCase() + type.slice(1)}
+          </button>
+        )}
       </div>
 
       {/* Table Section */}
