@@ -51,7 +51,7 @@ const Customer = sequelize.define(
     indexes: [
       {
         unique: true,
-        fields: ["c_name", "c_mobile_number"],
+        fields: ["c_mobile_number"],
         name: "unique_customer",
       },
     ],

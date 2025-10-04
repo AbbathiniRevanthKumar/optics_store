@@ -73,7 +73,10 @@ const AddProduct = ({ productType, productDetails, onSuccess }: Props) => {
     }
   };
 
-  const onProductDetailsChange = (name: string, value: string | number) => {
+  const onProductDetailsChange = (
+    name: string,
+    value: string | number | Date
+  ) => {
     const fieldKey: any = findKey(name);
 
     // Always allow empty string so user can clear the field

@@ -1,16 +1,24 @@
 import { Navigate } from "react-router-dom";
-import { useAppSelector } from "../store/customStoreHook";
+import { useAppDispatch, useAppSelector } from "../store/customStoreHook";
 import Sidebar from "../components/Sidebar";
 import Dashboard from "../components/Dashboard";
 import Stock from "../components/Stock/Stock";
 import Navbar from "../components/Navbar";
 import Orders from "../components/Orders/Orders";
+import Customers from "../components/customers/Customers";
+import { useEffect } from "react";
+import { setActive } from "../store/app.slice";
 
 type Props = {};
 
 const ProtectedRoute = (_props: Props) => {
   const user = useAppSelector((state) => state.auth);
   const app = useAppSelector((state) => state.app);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setActive("Dashboard"));
+  }, []);
 
   if (!user.isAuthenticated) {
     return <Navigate to={"/login"} />;
@@ -23,7 +31,8 @@ const ProtectedRoute = (_props: Props) => {
           <Navbar tab={app.activeTab} />
           {app.activeTab === "Dashboard" && <Dashboard />}
           {app.activeTab === "Stock" && <Stock />}
-          {app.activeTab === "Orders" && <Orders/>}
+          {app.activeTab === "Orders" && <Orders />}
+          {app.activeTab === "Customers" && <Customers />}
         </div>
       </div>
     </div>

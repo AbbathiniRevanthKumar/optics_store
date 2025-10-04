@@ -10,7 +10,7 @@ export const orderList = async () => {
   const details = await db.Order.findAll({
     where: { status: 1 },
     include: [
-      { model: Customer, as: "customer" },
+      { model: Customer, as: "customer", where: { status: 1 } },
       {
         model: OrderItem,
         as: "order_items",

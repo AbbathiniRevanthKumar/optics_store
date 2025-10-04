@@ -16,4 +16,10 @@ router.get(
   customerController.allCustomers
 );
 
+router.put(
+  "/delete/:id",
+  authorizeRole(["admin", "super-admin"]),
+  customerController.deleteCustomerById
+);
+
 export default router;

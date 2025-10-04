@@ -1,4 +1,12 @@
-import { Home, LogOut, Menu, X, Store, ShoppingCart } from "lucide-react";
+import {
+  Home,
+  LogOut,
+  Menu,
+  X,
+  Store,
+  ShoppingCart,
+  User2,
+} from "lucide-react";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/customStoreHook";
 import { logoutUser } from "../store/auth.slice";
@@ -31,6 +39,11 @@ const Sidebar = (_props: Props) => {
       name: "Orders",
       icon: <ShoppingCart size={20} />,
       acceptedRoles: ["user", "admin", "super-admin"],
+    },
+    {
+      name: "Customers",
+      icon: <User2 size={20} />,
+      acceptedRoles: ["admin", "super-admin","user"],
     },
   ];
 

@@ -30,6 +30,25 @@ export const allCustomers = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const customerDetails = await CustomerService.crud.getAll();
 
-    return ApiResponseHandler.success(res,"Customers Details",customerDetails,200);
+    return ApiResponseHandler.success(
+      res,
+      "Customers Details",
+      customerDetails,
+      200
+    );
+  }
+);
+
+export const deleteCustomerById = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    if (!id) throw new ApiError("Provide customer ID", 400);
+    const customerDetails = await CustomerService.crud.remove(Number(id));
+    return ApiResponseHandler.success(
+      res,
+      "Deleted customer details",
+      customerDetails,
+      200
+    );
   }
 );

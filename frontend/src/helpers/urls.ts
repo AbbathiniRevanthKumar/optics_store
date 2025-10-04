@@ -19,4 +19,6 @@ export const urls: url = {
 
   //customers
   getAllCustomers: "/customer/all",
+  createCustomer : "/customer/add",
+  deleteCustomer : "/customer/delete"
 };

@@ -36,6 +36,7 @@ type OrderItem = {
   Price: number;
   Discount: number;
   edit: boolean;
+  initialQuantity?: number;
 };
 
 const orderItemHeaders = [
@@ -109,6 +110,7 @@ const AddOrder = ({ completed, orderData }: Props) => {
     const itemsToList: OrderItem[] = [];
     orderData.order_items.map((item: any) => {
       const itemToList = getItemBody(item.frame, item.p_qty);
+      itemToList.initialQuantity = item.p_qty;
       itemsToList.push(itemToList);
     });
 
@@ -152,14 +154,20 @@ const AddOrder = ({ completed, orderData }: Props) => {
     setCustomerSearchQuery(customer.c_name);
   };
 
-  const checkItemRequiredQuantityInInventory = (item: OrderItem) => {
+  const checkItemRequiredQuantityInInventory = (
+    item: OrderItem,
+    incrementBy = 1
+  ) => {
     const inventoryItem: any = inventory.find(
       (inventoryItem) => inventoryItem.id === item.id
     );
-    
     if (!inventoryItem) return false;
 
-    return inventoryItem.f_qty >= item.Quantity + 1;
+    const oldQty = item.initialQuantity ?? 0;
+    const additionalNeeded = item.Quantity + incrementBy - oldQty;
+
+    // Available stock in inventory
+    return inventoryItem.f_qty >= additionalNeeded;
   };
 
   const getItemBody = (selectedItem: any, item_qty: number = 1) => {
@@ -357,7 +365,7 @@ const AddOrder = ({ completed, orderData }: Props) => {
             Customer Details
           </div>
           <div className="flex flex-wrap md:flex-nowrap gap-3 items-center justify-between px-4">
-            <div className="relative basis-full md:basis-3/5">
+            <div className="relative basis-full ">
               <FormField
                 field={{ type: "text", name: "customer" }}
                 value={customerSearchQuery}
@@ -393,7 +401,7 @@ const AddOrder = ({ completed, orderData }: Props) => {
                 </div>
               )}
             </div>
-            {!isEdit && (
+            {/* {!isEdit && (
               <div className="w-full md:w-auto">
                 <button
                   className="bg-primary/80 hover:bg-primary-hover transition duration-150 ease-in-out hover:text-text-primary px-3 rounded-lg py-2.5 cursor-pointer w-full md:w-auto"
@@ -402,7 +410,7 @@ const AddOrder = ({ completed, orderData }: Props) => {
                   + Add New Customer
                 </button>
               </div>
-            )}
+            )} */}
           </div>
         </div>
 

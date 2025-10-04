@@ -59,7 +59,7 @@ const FormField = (props: Props) => {
           onChange={(date) =>
             onChange(
               field.name,
-              date ? date.toISOString().split("T")[0] : new Date()
+              date ? date.toISOString().split("T")[0] : ""
             )
           }
           dateFormat="dd-MM-yyyy"

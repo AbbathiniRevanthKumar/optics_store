@@ -20,3 +20,12 @@ export const orderListHeaders: Record<string, string> = {
   ["Delivery Date"]: "orderDeliveryDate",
   ["Status"]: "orderStatus",
 };
+
+export const customerListHeaders: Record<string,string> = {
+  ID : "id",
+  Customer : "c_name",
+  Email : "c_email",
+  Mobile : "c_mobile_number",
+  Place : "c_place",
+  DOB : "c_dob"
+}
